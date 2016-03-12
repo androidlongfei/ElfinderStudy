@@ -1,0 +1,35 @@
+*~
+._*
+_*
+.DS_Store
+php-old
+extensions
+build
+files2
+elFinderVolumeSVN.class.php
+connector-svn.php
+node_modules
+connector.php
+
+### Example user template template
+### Example user template
+
+# node_moduels
+node_modules/
+
+# dist
+dist/
+out/
+
+# tmp
+.tmp/
+
+npm-debug.log
+Frontend/app/partials.js
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
