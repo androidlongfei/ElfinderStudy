@@ -1,0 +1,15 @@
+文件管理器
+一.html+css+js作前端，node.js作后端
+1.安装
+1.1.下载源码
+https://github.com/scaret/node-elfinder
+
+1.2.运行
+1. 切换到example目录
+2. 然后运行node express.js
+3. 访问http://localhost:8000/elfinder.html
+
+该版本功能比较少，需要扩展功能，要访问以下开源文件
+https://github.com/search?utf8=%E2%9C%93&q=node-elfinder
+
+
