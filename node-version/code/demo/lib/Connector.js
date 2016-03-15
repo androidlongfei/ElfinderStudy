@@ -1,5 +1,6 @@
 var      _ = require("underscore");
 var Busboy = require("busboy");
+var url = require('url');
 
 var getParams = function (req, res, next){
     var app                  = this;
@@ -16,12 +17,17 @@ var getParams = function (req, res, next){
 
     req.elfinder.name        = req.body.name   || req.query.name;
 
-    //console.log(req.body);
+    console.log('body 3',req.body);
     req.elfinder.targets     = req.body.targets || req.query.targets || [];
     req.elfinder.targetsParts= _.map(req.elfinder.targets, function (target){return target.split("/");});
     req.elfinder.pathsParts  = _.map(req.elfinder.targetsParts, function (targetParts){return targetParts.slice(1);});
 
-    //console.log(req.elfinder);
+    console.log('body req url',req.url);
+    var parameter = url.parse(req.url,true).query;
+    if(parameter.rootPath){
+        req.elfinder.root.path = parameter.rootPath;
+    }
+    console.log(req.elfinder.root,req.elfinder.root);
 
     if (req.headers['content-type'] && req.headers['content-type'].indexOf('multipart/form-data') == 0){
         var busboy           = new Busboy({headers: req.headers});
@@ -70,7 +76,8 @@ var getParams = function (req, res, next){
     }
     else if (req.elfinder.root){
         req.elfinder.driver     = req.elfinder.root.driver;
-        //console.log(req.elfinder.driver);
+        console.log("root 4",req.elfinder.root);
+        console.log('req.elfinder',req.elfinder);
         next();
     }
     else{
@@ -79,10 +86,12 @@ var getParams = function (req, res, next){
 };
 
 var routeDriver = function (req, res, next){
+    //console.log('route req',req);
     var app    = this;
     var driver = app.drivers[req.elfinder.driver];
     if (driver[req.elfinder.cmd]){
         driver[req.elfinder.cmd](req, res, next);
+        console.log("route 5",req.elfinder.root);
     }
     else{
         res.status(404).end("No cmd " + req.elfinder.cmd + " for driver " + req.elfinder.driver);
@@ -91,18 +100,18 @@ var routeDriver = function (req, res, next){
 
 module.exports.Connector = function (app){
     app.drivers = {};
-    console.log('app',app);
+    console.log('app 1',app);
     var config  = app.get('elfinder');
 
     for (var rootName in config.roots){
         var rootConfig = config.roots[rootName];
         if (!app.drivers[rootConfig.driver]){
             app.drivers[rootConfig.driver] = require("./Connector." + rootConfig.driver);
-            console.log("Loaded Driver", rootConfig.driver);
+            console.log("Loaded Driver 2", rootConfig.driver);
         }
     }
 
-    app.all("/file-connector",  getParams        .bind(app));
-    app.all("/file-connector",  routeDriver      .bind(app));
+    app.all("/file-connector",getParams.bind(app));
+    app.all("/file-connector",routeDriver.bind(app));
 
 };

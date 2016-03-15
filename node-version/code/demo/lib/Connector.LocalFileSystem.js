@@ -10,7 +10,7 @@ var mime   = require("mime"           );
 module.exports.handle = function (req, res, next){
     var app = this;
 
-    console.log('req',req);
+    //console.log('req',app.get('elfinder'));
     res.json(app.get('elfinder'));
 };
 
@@ -88,6 +88,7 @@ var getFilesFromFolder = function (pathFolder, callback){
 module.exports.open = function (req, res, next){
     var pathFolder = path.join(req.elfinder.root.path, req.elfinder.pathParts.join(path.sep));
     var prefix = [req.elfinder.rootName].concat(req.elfinder.pathParts).join("/");
+    //console.log('LocalFileSystem open',res);
     console.log("LocalFileSystem open " + pathFolder);
     getFile(pathFolder, function (err, folder){
         //console.log(JSON.stringify(folder, null, 2));
